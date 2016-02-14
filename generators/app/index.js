@@ -1,40 +1,35 @@
 'use strict';
 var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
 var yosay = require('yosay');
 
 module.exports = yeoman.generators.Base.extend({
+
+  init: function () {
+    this.log(yosay('Welcome to the marvellous ASP.NET 5 generator!'));
+    this.templatedata = {};
+  },
+
   prompting: function () {
     var done = this.async();
 
-    // Have Yeoman greet the user.
-    this.log(yosay(
-      'Welcome to the breathtaking ' + chalk.red('generator-aspnetcore-api') + ' generator!'
-    ));
-
     var prompts = [{
-      type: 'confirm',
-      name: 'someOption',
-      message: 'Would you like to enable this option?',
-      default: true
+      type: 'input',
+      name: 'applicationName',
+      message: 'The name of the application',
+      default: 'BasicWebServerApplication'
     }];
 
     this.prompt(prompts, function (props) {
-      this.props = props;
-      // To access props later use this.props.someOption;
+      this.applicationName = props.applicationName;
+      this.namespace = props.applicationName;
 
       done();
     }.bind(this));
   },
 
   writing: function () {
-    this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
-    );
-  },
+    this.directory('src', 'src');
 
-  install: function () {
-    this.installDependencies();
+    this.fs.copy(this.templatePath('NuGet.config'), this.destinationPath('NuGet.config'));
   }
 });
